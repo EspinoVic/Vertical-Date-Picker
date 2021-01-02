@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTransition, animated } from 'react-spring'
+import { useTransition,useSprings, animated } from 'react-spring'
 import { useState } from 'react'
 
 /* const pages = [
@@ -20,6 +20,7 @@ export default function VerticalPicker({data,...props}) {
     const [index, setIndex] = useState(0);
     const [itemsForPicking/* ,setitemsForPicking */] = useState(reduceItemsExpresion(data));
 
+    let itemsToShow = getItemsToShow(itemsForPicking,index) /* itemsForPicking.slice(index,index + 5); */
     const onClick = (event) =>{
       isUp = event.deltaY>0;
       setIndex(
@@ -35,23 +36,85 @@ export default function VerticalPicker({data,...props}) {
       ) 
     } 
   
-  
-    const transitions = useTransition(index, p => p, {
-        from:  { opacity: 0, transform: `translate3d(0,${isUp?100:-100}%,0)` },
-        enter: { opacity: 1, transform: `translate3d(0%,0,0)` },
-        leave: { opacity: 0, transform: `translate3d(0,${isUp?-100:100}%,0)` },
+    let itemsForSpringing = itemsToShow//itemsToShow.slice(1,1+itemsToShow.length-2);
+/*     const springs = useSprings(itemsForSpringing.length, 
+        itemsToShow.map( 
+            (item) => {
+                return (
+                    { 
+                        transform: `translate3d(0,${isUp?-100:100}%,0)`,
+                    }
+
+                )  
+        }
+        )
+    )
+    let itemsSpringed = springs.map((propss,index) => {
+        return <ItemPicker key={itemsForSpringing[index]} content={itemsForSpringing[index]} style={propss}></ItemPicker>
+    }); */
+
+
+    let itemsToMountUnmount = itemsToShow//[itemsToShow[0], itemsToShow[itemsToShow.length-1]];
+    const transitions = useTransition(itemsToShow, p => p, {
+        from:  { opacity: 1,/* transform: `translate3d(0,${isUp?100:-100}%,0)`, */ },
+        enter: { opacity: 1,},
+        leave: { opacity: 1,/* transform: `translate3d(0,${isUp?-100:100}%,0)` ,*/ },
+    })
+    let itemsTransitioned = transitions.map(({ item, props, key },index) => {
+        return <ItemPicker key={key} content={item} style={props}></ItemPicker>
+
     })
 
+    
     return (
         <div className="verticalpicker-container" onWheel={onClick}>
-            {transitions.map(({ item, props, key }) => {
-                return <ItemPicker key={key} content={itemsForPicking[item]} style={props}></ItemPicker>
-            /*  const Page = pages[item]
-                return <Page key={key} style={props} /> */
-            })}
+            {/* {itemsTransitioned[0]} */}
+            {/* {itemsSpringed} */}
+            {itemsTransitioned}
+         {/*    {itemsTransitioned[1]} */}
+            
         </div>
     )
 }
+
+/*
+    It's gonna get  5 elements from offset (index), 
+    2 aboves,
+    2 below and 
+    index
+*/
+function getItemsToShow(array, offset){
+
+    let elements = [];
+    elements[elements.length] = getElementFromOffset(array,offset, -2);
+    elements[elements.length] = getElementFromOffset(array,offset, -1);
+    elements[elements.length] = getElementFromOffset(array,offset, 0)/* array[offset] */;
+    elements[elements.length] = getElementFromOffset(array,offset, 1);
+    elements[elements.length] = getElementFromOffset(array,offset, 2);
+    return elements;
+}
+
+/* offset must be 1,2,-1,-2,0 */
+function getElementFromOffset(array,offset,range){
+    let arrayLength = array.length;
+
+    let newIndex = offset+range;
+    //out of index negative
+    if(newIndex<0){
+        newIndex = array.length-Math.abs(newIndex);
+    }//out of index positive
+    else if(newIndex>=array.length){
+        newIndex = newIndex-Math.abs(array.length);
+
+    }//0
+    else{
+        //nothing changed
+    }
+
+    return array[newIndex];
+
+}
+
 
 function reduceItemsExpresion(data){
     let newArr = [];

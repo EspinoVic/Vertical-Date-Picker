@@ -4,8 +4,9 @@ import VerticalPicker from './VerticalPicker'
 function DatePicker() {
     return (
         <div className="datepicker-container">
+          <VerticalPicker data={meses}></VerticalPicker>
             <VerticalPicker data={dias}></VerticalPicker>
-            <VerticalPicker data={meses}></VerticalPicker>
+            
             <VerticalPicker data={años}></VerticalPicker>        
         </div>
     )
