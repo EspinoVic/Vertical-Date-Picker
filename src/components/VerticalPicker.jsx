@@ -1,18 +1,7 @@
 import React from 'react'
-import { useTransition,useSprings, animated } from 'react-spring'
+import { useTransition, animated } from 'react-spring'
 import { useState } from 'react'
 
-/* const pages = [
-    ({ style }) => <animated.div style={{ ...style, background: 'lightpink' }}>A</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightblue' }}>B</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightgreen' }}>C</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightpink' }}>D</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightblue' }}>E</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightgreen' }}>F</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightpink' }}>G</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightblue' }}>H</animated.div>,
-    ({ style }) => <animated.div style={{ ...style, background: 'lightgreen' }}>I</animated.div>,
-  ] */
 let isUp = false;
 
 export default function VerticalPicker({data,...props}) {
@@ -36,25 +25,7 @@ export default function VerticalPicker({data,...props}) {
       ) 
     } 
   
-    let itemsForSpringing = itemsToShow//itemsToShow.slice(1,1+itemsToShow.length-2);
-/*     const springs = useSprings(itemsForSpringing.length, 
-        itemsToShow.map( 
-            (item) => {
-                return (
-                    { 
-                        transform: `translate3d(0,${isUp?-100:100}%,0)`,
-                    }
 
-                )  
-        }
-        )
-    )
-    let itemsSpringed = springs.map((propss,index) => {
-        return <ItemPicker key={itemsForSpringing[index]} content={itemsForSpringing[index]} style={propss}></ItemPicker>
-    }); */
-
-
-    let itemsToMountUnmount = itemsToShow//[itemsToShow[0], itemsToShow[itemsToShow.length-1]];
     const transitions = useTransition(itemsToShow, p => p, {
         from:  { opacity: 1,/* transform: `translate3d(0,${isUp?100:-100}%,0)`, */ },
         enter: { opacity: 1,},
@@ -68,11 +39,7 @@ export default function VerticalPicker({data,...props}) {
     
     return (
         <div className="verticalpicker-container" onWheel={onClick}>
-            {/* {itemsTransitioned[0]} */}
-            {/* {itemsSpringed} */}
-            {itemsTransitioned}
-         {/*    {itemsTransitioned[1]} */}
-            
+            {itemsTransitioned}            
         </div>
     )
 }
